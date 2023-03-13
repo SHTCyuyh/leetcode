@@ -102,5 +102,6 @@ int main(){
     lRUCache.get(1);    // 返回 -1 (未找到)
     lRUCache.get(3);    // 返回 3
     lRUCache.get(4);    // 返回 4
+    return 0;
     
 }
