@@ -10,7 +10,7 @@ struct ListNode {
 
 class Solution {
 public:
-    ListNode* hasCycle(ListNode* head) {
+    bool hasCycle(ListNode* head) {
         ListNode* slow = head;
         ListNode* fast = head;
         while (fast && fast->next){
