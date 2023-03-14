@@ -31,6 +31,7 @@ public:
     if (p2 != NULL){
         p->next = p2;
     }
-    }
     return dummy->next;
+    }
+    
 };
