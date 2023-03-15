@@ -17,7 +17,7 @@ public:
             slow = slow->next;
             fast = fast->next->next;
         }
-        if (fast != NULL){  //判断是奇数还是偶数 偶数需要slow指向第二个中心
+        if (fast != NULL){  //判断是奇数还是偶数  奇数需要slow指向非中心
             slow = slow->next;
         }
         ListNode* left = head;
