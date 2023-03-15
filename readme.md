@@ -34,3 +34,12 @@
 * 双指针同时移动，但是不能保证同时到达交点，拼接构建两个新的单链；
 * 暴力解法，可以用`hash`去记录一个表的节点，再和另一个表对比；
 * 终止条件是两个指针指向同一节点。
+
+```
+3.15 reverseList(206):
+```
+* 解决递归问题，明确递归函数的定义，本题：输入节点头节点head，翻转以head为头的节点，下一个入口，翻转以head->next为头的链表
+![avatar](D://Desktop//chatgpt//leetcode//fig//3.15reverse.jpg)
+* 让head->next->next = head; 断开指向null的指针 使得2->1;
+* 再使用head->next = NULL; 使得1->NULL;
+* 
