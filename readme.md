@@ -39,7 +39,7 @@
 3.15 reverseList(206):
 ```
 * 解决递归问题，明确递归函数的定义，本题：输入节点头节点head，翻转以head为头的节点，下一个入口，翻转以head->next为头的链表
-![avatar](D://Desktop//chatgpt//leetcode//fig//3.15reverse.jpg)
+![avatar](fig/3.15reverse.jpg)
 * 让head->next->next = head; 断开指向null的指针 使得2->1;
 * 再使用head->next = NULL; 使得1->NULL;
   
@@ -50,7 +50,7 @@
 * 回文的特征是关于中心对称（注意奇偶，奇只有一个中心，偶有两个中心）；
 * 判断回文串两种思路：从中心往两边走，从两边往中心走（都可以用双指针）；
 * 判断回文链表的难点在于单链表不可逆（递归栈实现倒序和二叉树类似）
-![avatar](D://Desktop//chatgpt//leetcode//fig//3.15traverse.jpg)
+![avatar](fig/3.15traverse.jpg)
 * 两种方法：直接逆转单链表即可；找到中点只逆转后半部分（节省空间）；
   
 ```
