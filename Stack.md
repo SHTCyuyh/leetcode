@@ -31,5 +31,9 @@
 
 
 ```
-3.NextGreaterElement(496)
+3.NextGreaterElement1(496)
 ```
+* 单调栈：本题需要判定的是数组右边有无更大元素，可以从右边遍历，用栈顶存放比当前值大的元素
+* ![avatar](fig/3.18nextgreaterele.png)
+* hashmap定义：unordered_map<int, int> greaterMap;
+* map[key] = values;
