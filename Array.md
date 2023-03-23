@@ -35,6 +35,11 @@ vector.resize(n) 当resize n大于原来vector的长度时，末尾补0；当n�
 * ![avatar](fig/前缀和矩阵.png)
 
 ```
-3.22 差分数组(370)
+3.22 差分数组(1109)
 ```
 * 差分数组的主要适用场景是频繁对原始数组的某个区间的元素进行增减。
+* ![avatar](fig/差分数组.png)
+* 差分数组类构造函数，初始化全0， increment(i,j,val),  result();
+* 注意increment中边界条件，只用修改diff[i] 和 diff[j+1] 如果j+1越界，则不用修改
+* for (auto &booking: bookings)写法
+* 熟悉一下c++类的构造；
