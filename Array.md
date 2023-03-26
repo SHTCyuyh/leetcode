@@ -60,7 +60,15 @@ vector.resize(n) 当resize n大于原来vector的长度时，末尾补0；当n�
 
 
 ```
-3.26滑动窗口()
+3.26滑动窗口(76)
 ```
 * 滑动窗口基本思路：增大窗口，从右加入元素；不满足条件，从左缩小窗口
 * ![avatar](fig/3.26滑动窗口.png)
+
+```
+3.26minWindow(76) & checkInclusion(567) findAnagrams（438）
+```
+* window 和need 之间的关系，可以用一个valid数来记录满足的个数 
+* right++ 的时候， window对应++， 判断need ==  window时 valid++
+* 缩小窗口时，先判断need == window的情况，valid--后再window--；
+* vector<int> res; 动态往数组中加元素， res.push_back() 
