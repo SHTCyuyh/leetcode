@@ -43,3 +43,24 @@ vector.resize(n) 当resize n大于原来vector的长度时，末尾补0；当n�
 * 注意increment中边界条件，只用修改diff[i] 和 diff[j+1] 如果j+1越界，则不用修改
 * for (auto &booking: bookings)写法
 * 熟悉一下c++类的构造；
+
+
+```
+3.25 旋转图像(48)
+```
+* 顺时针旋转图像90：按照左上到右下的对角线进行镜像对称 然后再对矩阵的每一行进行反转：
+* 逆时针旋转图像90：按照右上到左下的对角线进行镜像对称 然后再对矩阵的每一行进行反转
+
+
+```
+3.26spiralOrder(54 & 59)
+```
+* ![avatar](fig/3.26spiralOrder.png)
+* ![avatar](fig/3.26spiralOrder.png)
+
+
+```
+3.26滑动窗口()
+```
+* 滑动窗口基本思路：增大窗口，从右加入元素；不满足条件，从左缩小窗口
+* ![avatar](fig/3.26滑动窗口.png)
