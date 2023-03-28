@@ -91,9 +91,19 @@ vector.resize(n) 当resize n大于原来vector的长度时，末尾补0；当n�
 
 
 ```
-田忌赛马
+3.27田忌赛马（870）
 ```
 * 将齐王和田忌的马按照战斗力排序，然后按照排名一一对比。如果田忌的马能赢，那就比赛，如果赢不了，那就换个垫底的来送人头，保存实力。
 *  auto cmp = [](pair<int,int> left, pair<int,int> right){return (left.second) < (right.second);};
 *  priority_queue<pair<int, int>, vector<pair<int, int>>, decltype(cmp)> mq(cmp);
 *  优先队列操作，按照第二个元素值排列。
+
+
+```
+3.28常数时间删除-查找数组中的任意元素（380）
+```
+* 对于常规的hashset不能实现O(1)随机取元素（随机分散到整个数组中，不紧凑）。
+* 对数组尾部进行插入和删除操作不会涉及数据搬移，时间复杂度是 O(1)
+* 如果我们想在 O(1) 的时间删除数组中的某一个元素 val，可以先把这个元素交换到数组的尾部，然后再 pop 掉。
+* vector<int> nums; nums.back()访问数组最后一个元素； nums.push_back()往最后添加元素；nums.pop_back()从向量中删除最后一个元素并将向量的大小减小一。
+* rand()
