@@ -134,3 +134,138 @@ auto start = vector.begin() + i;
 auto end = start + n;
 sort(start, end)
 ```
+
+
+### 32.最长有效括号字串
+最长字串问题，多使用dp算法
+括号匹配问题  stack<char>
+这里使用了使用索引去方便求取长度。
+
+
+### 33.搜索旋转排序数组
+要求时间复杂度是 $log(n)$ 所以使用二分查找的思想；
+每次二分查找会使得整个数组变为一个有序，一个部分有序；
+如果target在有序部分就使用二分查找；
+target在部分有序则选哟判断
+```
+if(nums[0] > nums[mid]) //部分有序；
+    {
+        if(taget<=nums[n-1] && nums[mid] < target) l = mid+1;
+        else{
+            r = mid -1
+        }
+    }
+```
+
+
+### 34.在排序数组中查找元素的上下确界
+二分查找同一写法：
+```
+left = 0, right = n-1;
+while(left <= right){
+    int mid = left = (right - left)/2;
+    if(nums[mid] < target) left = mid+1;
+    if(nums[mid] > target) right = mid-1;
+    if(nums[mid] ==  target){
+        right = mid-1; //左边一第一个
+        //left = mid+1;  //右边最后一个
+    } 
+}
+```
+
+
+### 39.组合总和
+排列相关问题使用回溯算法，框架：
+```
+void backtrace(choicelist, trace, res, 条件相关){
+    if(满足条件) {
+        res.push_back(trace)
+        return;
+        }
+    if(不满足条件) return;
+    for(choice in choicelist){
+        trace.add(choice)
+        choicelist.remove(choice)
+        backtrace(choicelist, trace, res, 条件)
+        trace.remove(choice)
+        choicelist.add(choice)
+    }
+}
+```
+
+### 42.接雨水
+思维题， 对于第i个，能接的雨水表示为：
+```
+water[i] = min(maxheight[0:i-1], maxheight[i+1:n-1]) - height[i]
+```
+只需要计算包含i在内的左边最大数组，和右边最大数组，然后根据上述定义即可；
+
+### 46.全排列
+标准全排列
+条件相关： 可以用`trace.size() == num.size()`来衡量
+从choiceList中remove 可以用个used bool数组来标记
+```
+void backtrace(choicelist, trace, res, 条件相关){
+    if(满足条件) {
+        res.push_back(trace)
+        return;
+        }
+    for (int i = 0; i < nums.size(); i++) {
+            // 排除不合法的选择
+            if (used[i]) {
+                // nums[i] 已经在 track 中，跳过
+                continue;
+            }
+            // 做选择
+            track.push_back(nums[i]);
+            used[i] = true;
+            // 进入下一层决策树
+            backtrack(nums, track, used);
+            // 取消选择
+            track.pop_back();
+            used[i] = false;
+        }
+}
+```
+
+
+### 48 旋转图像
+先按照对角线；
+在每行 reverse
+
+
+### 49 字母异位词分组；
+数据结构知识：
+1.将字母映射成为偏移，并且强制转换数据类型  encode：
+```
+vector<int> count(26,0)
+for (char c:s){
+    int delta = c - 'a';
+    count[delta] ++;
+}
+string code(count.begin() count.end());
+```
+2.unordered_map<type1, type2>遍历方法：
+```
+for(auto e : mp){
+    e.first;  type1
+    e.second;  type2
+}
+```
+
+
+### 53最大子数组和
+动态规划：
+dp数组的定义： 以i结尾的最大子数组和为dp[i]； 再去遍历整个dp；
+`dp[i] 不能定义成到第i个时，子数组的和最大为dp[i]. 子数组和必须连续，这里可能不连续，不能通过dp[i] 推到出dp[i+1], 同样也不能直接通过dp[n-1]得到结果`
+
+
+
+### 55.跳跃游戏
+只需要记录第i个各自最远能跳多远即可；
+注意边界条件，遇到0的时候怎么处理；
+遍历的时候只用遍历nums[n-2]就需要停止；
+```
+int farest = max(farest, i+nums[i])
+if(farest <= i) return false //前面最远都不能到i的下一个，直接失败
+```
