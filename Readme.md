@@ -91,3 +91,46 @@ def backtrack(choicelist, track, answer){
 ```
 解决问题：全排列，组合，子集等问题。
 
+
+## day 0414
+### 19. 删除链表的倒数第 N 个结点
+思路简单，双指针，细节处理需要注意；
+头节点也算一步， 所以需要用一个虚拟头节点来处理边界更加简单；
+```
+ListNode * dummy = new ListNode(-1)
+dummy ->next = head;
+```
+好处是倒数第n个是头节点的时候不用特殊处理，可以直接删去。
+
+
+## day 0420
+### 22.括号生成
+回溯算法，基础框架
+明确choicelist， answer， track，
+```
+def backtrack(choicelist, track, answer){
+    if(choicelist is empty): answer.add(track);
+    for choice in choicelist:
+        track.add(choice)
+        choicelist.remove(choice)
+        backtrack(choicelist, track, answer)
+        track.remove(choice)
+        choicelist.add(choice)
+}
+```
+多个选择的时候，在backtrace函数中先选择一个， 在选择第二个
+
+### 23.合并K个升序链表
+合并多次两个链表即可；
+
+### 31.下一个排列
+1.从后找到第一个顺序对（相邻的升序） 左边的数；
+2.从后往前找第一个比左边的数更大的数，并交换；
+3.升序排列左边的数往后的；
+
+排序vector 从某个特定的区间：
+```
+auto start = vector.begin() + i;
+auto end = start + n;
+sort(start, end)
+```
