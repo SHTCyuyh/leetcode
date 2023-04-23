@@ -269,3 +269,43 @@ dp数组的定义： 以i结尾的最大子数组和为dp[i]； 再去遍历整�
 int farest = max(farest, i+nums[i])
 if(farest <= i) return false //前面最远都不能到i的下一个，直接失败
 ```
+
+## day 0423
+### 56.合并区间
+修改vector<vector< int>中迭代器的元素：
+```
+* 1利用引用： auto& last = vec[i] last[1] = new vaule   
+* 2先pop后再push： auto last = vec[i] res.pop_back(), res.push_back()
+```
+vector中的最后一个元素： vec.back();
+类中定义cmp操作；需要使用static 关键字
+cmp定义： bool cmp（type1， type2）
+
+### 62.不同路径
+```
+vector<vector<int>> memo;
+int difpath(int m, int n){
+    memo = vector(m,vector<int>(n,0));
+    return dp(m-1, n-1);
+}
+dp(int x, int y){
+    if(x ==0 && y == 0) return 1;
+    if(x<0 || y< 0) return 0;
+    if(memo[x][y] != 0) return memo[x][y];
+    memo[x][y] = dp(x-1,y) + dp(x,y-1);
+    return memo[x][y];
+}
+```
+### 70.爬楼梯
+一维dp： 到第n阶 可以从n-1 和 n-2 到，所以dp[i] = dp[i-1] + dp[i-2]
+
+### 72.编辑距离
+二维dp dp函数定义：从s1[0:i] 到s2[0:j]最少需要修改次数；
+如果用dp(i，j)表示s1[0:i] 和 s2[0:j] 实际上出现了一次偏移，因为函数入口为dp(i-1,j-1)所以再base case时候需要索引为-1 且 i+1； j+1；
+```
+    int dp(string &s1, int i, string& s2, int j){
+        if(i == -1) return j+1;
+        if(j == -1) return i+1;
+        ...
+    }
+```
