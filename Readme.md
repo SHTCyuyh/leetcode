@@ -311,7 +311,7 @@ dp(int x, int y){
 ```
 
 
-## 0424
+## day 0424
 ### 78.子集
 注意和全排列的区别
 ```
@@ -338,3 +338,54 @@ dp(int x, int y){
 
 ### 75.颜色分类;
 可以先遍历一次数组，将0全部排再数组的左侧，让后从第一个非0数开始，交换1，2位置即可；
+
+
+## day 0425
+### 79.单词搜索
+对应问题为 DFS/BFS(岛屿系列问题)
+`DFS`深度优先搜索遍历的框架：
+```
+void traverse(TreeNode *root){
+    traverse(root->left);
+    traverse(root->right);
+}
+void dfs(vector<vector<int>>& grid, int i , int j, vector<vector<bool>>& visited){
+    int m = grid.size(), n = grid[0].size();
+    if(i<0 || j<0 || i>=m || j >= m){
+        return;
+    }
+    if(visited[i][j]){
+        return;
+    }
+    visited[i][j] = true;
+    dfs(grid,i-1,j,visited); //上
+    dfs(grid,i+1,j,visited); //下
+    dfs(grid,i,j-1,visited); //左
+    dfs(grid,i,j+1,visited); //右
+}
+```
+注意：使用过后的字符不能继续使用。
+```
+    void dfs(vector<vector<char>>& board, int i, int j, string word, int p){
+        if(p == word.size()){
+            found = true;
+            return;
+        }
+        if(found){
+            return;
+        }
+        int m = board.size(), n = board[0].size();
+        if (i < 0 || j < 0 || i >= m || j >= n) {  // 在边界之外，返回
+            return;
+        }
+        if(board[i][j] != word[p]){
+            return;
+        }
+        board[i][j] = (char)(-board[i][j]);
+        dfs(board, i + 1, j, word, p + 1);  // 向下搜索
+        dfs(board, i, j + 1, word, p + 1);  // 向右搜索
+        dfs(board, i - 1, j, word, p + 1);  // 向上搜索
+        dfs(board, i, j - 1, word, p + 1);  // 向左搜索
+        board[i][j] = (char)(-board[i][j]);  // 回溯当前字符
+    }
+```
