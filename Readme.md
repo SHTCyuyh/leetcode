@@ -389,3 +389,72 @@ void dfs(vector<vector<int>>& grid, int i , int j, vector<vector<bool>>& visited
         board[i][j] = (char)(-board[i][j]);  // 回溯当前字符
     }
 ```
+
+
+## day 0426
+
+### 84.柱状图中最大的矩形
+在一维数组中对每一个数找到第一个比自己小的元素。这类“在一维数组中找第一个满足某种条件的数”的场景就是典型的单调栈应用场景。
+对于每一个高度，只需要向左向右遍历得到比他小的第一个边界就可以求出对于这个高度最大的面积；
+```
+stack<int> memo;
+vector<int> left;
+for(int i=0; i<n; i++){
+    while(!memo.empty() && heights[memo.top()] >= heights[i]){
+        memo.pop();
+    }
+    left[i] = (memo.empty() ? -1:memo.top());
+    memo.push(i);
+}
+```
+
+### 85.最大矩形
+将二维数组第一层看成一个矩阵，会形成m行柱状图，然后类似于84中的方法解决
+
+
+### 94.二叉树的中序遍历
+注意vector.insert()方法
+```
+vector.insert(插到位置，插入开始位置，插入结束位置)
+res.insert(res.end(), left.begin(), left.end());
+```
+### 96.不同的二叉搜索树
+题目：给你一个整数 n ，求恰由 n 个节点组成且节点值从 1 到 n 互不相同的 二叉搜索树 有多少种？返回满足题意的二叉搜索树的种数。
+递归+备忘录解决
+递归：以闭区间[1,n]的二叉搜索树；
+```
+int count(int lo, int hi){
+    if(lo > hi){return 1}; //null 也是一种结果
+    int res = 0;
+    for(int i=lo; i<=hi; i++){
+        int left = count(lo, i-1);
+        int right = count(i+1, hi);  //以i为根节点的左右二叉搜索树；
+        res += left * right;
+    }
+    return res
+}
+
+
+
+求所有的二叉搜索树：
+List<TreeNode> build(int lo, int hi){
+    List<TreeNode> res = new LinkedList<>();
+    if(lo > hi){
+        res.add(null);
+        return res;
+    }
+    for(int i=lo; i<=hi; i++){
+        List<TreeNode> leftTree  = count(lo, i-1);
+        List<TreeNode> rightTree  = count(i+1, hi);  //以i为根节点的左右二叉搜索树；
+        for(TreeNode left: leftTree){
+            for(TreeNode right:rightTree){
+                TreeNode root = new Treenode(i);
+                root.left = left;
+                root.right = right;
+                res.add(root);
+            }
+        }
+    }
+    return res;
+}
+```
