@@ -458,3 +458,30 @@ List<TreeNode> build(int lo, int hi){
     return res;
 }
 ```
+
+## day 0428
+
+### 98.验证二叉搜索数
+BST 左小右大的特性是指 root.val 要比左子树的所有节点都更大，要比右子树的所有节点都小，你只检查左右两个子节点当然是不够的。正确解法是通过使用辅助函数，增加函数参数列表，在参数中携带额外信息，将这种约束传递给子树的所有节点。
+```
+bool check(TreeNode* root, TreeNode* minNode, TreeNode* maxNode){
+    if(root == nullptr) return true;
+    if(minNode != nullptr && root->val <= minNode->val) return false;
+    if (maxNode != nullptr && root->val >= maxNode->val) return false;
+    return checkValidBST(root->left, minNode, root)
+            && checkValidBST(root->right, root, maxNode);
+}
+```
+
+### 101.对称二叉树
+镜像左子树和右子树完全一样，先遍历左子树，再遍历右子树（栈或者递归思想）
+```
+    bool check(TreeNode *p, TreeNode *q) {
+        if (!p && !q) return true;
+        if (!p || !q) return false;
+        return p->val == q->val && check(p->left, q->right) && check(p->right, q->left);
+    }
+```
+
+### 二叉树的层次遍历
+注意先进先出用queue  queue.front() q.pop()
