@@ -485,3 +485,8 @@ bool check(TreeNode* root, TreeNode* minNode, TreeNode* maxNode){
 
 ### 二叉树的层次遍历
 注意先进先出用queue  queue.front() q.pop()
+
+
+
+## day 0429
+### 105.从中序遍历和先序遍历构建二叉树
