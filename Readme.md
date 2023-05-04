@@ -490,3 +490,79 @@ bool check(TreeNode* root, TreeNode* minNode, TreeNode* maxNode){
 
 ## day 0429
 ### 105.从中序遍历和先序遍历构建二叉树
+每次确定根节点，左子树的根， 右子树的根
+
+```
+    TreeNode* build(vector<int>& preorder, int preStart, int preEnd,
+                    vector<int>& inorder, int inStart, int inEnd){
+        if(preStart > preEnd){
+            return nullptr;
+        }
+        int rootVal = preorder[preStart];
+        int index = valToIndex[rootVal];
+        int leftsize = index -inStart;
+        TreeNode* root = new TreeNode(rootVal);
+        root->left = build(preorder, preStart + 1, preStart + leftsize,
+                           inorder, inStart, index - 1);
+        root->right = build(preorder, preStart + leftsize + 1, preEnd,
+                            inorder, index + 1, inEnd);
+
+        return root;
+    }
+```
+
+
+## day 0502
+### 114二叉树展开为单链表形式
+![avatar](fig/flatten.png)
+```
+        if (root == nullptr) return;
+        // 先递归拉平左右子树
+        flatten(root->left);
+        flatten(root->right);
+
+        /****后序遍历位置****/
+        // 1、左右子树已经被拉平成一条链表
+        TreeNode* left = root->left;
+        TreeNode* right = root->right;
+
+        // 2、将左子树作为右子树
+        root->left = nullptr;
+        root->right = left;
+
+        // 3、将原先的右子树接到当前右子树的末端
+        TreeNode* p = root;
+        while (p->right != nullptr) {
+            p = p->right;
+        }
+        p->right = right;
+
+```
+
+## day 0504 
+### 股票买卖问题：动态规划求解
+对于dp问题，状态和选择非常重要，对于股票买卖的问题状态有：天数，允许交易次数，持有状态(1，0)
+选择有三种：买入，卖出，持有。但是有一定限制买入在卖出之前。
+```
+状态转移：分为两种，持有和不持有
+dp[i][k][0] = max(dp[i-1][k][0], dp[i-1][k][1] + prices[i])
+              max(昨天就没有持有， 昨天持有但是今天卖了)
+dp[i][k][1] = max(dp[i-1][k][1], dp[i-1][k-1][0] - prices[i])
+              max(昨天就持有，昨天每持有今天买进)       
+base case：
+            dp[-1][...][0] = 0 (因为i是从0开始因此i=-1是dp=0)
+            dp[-1][...][1] = -infinity(：还没开始的时候，是不可能持有股票的)
+            dp[...][0][0] = 0(因为 k 是从 1 开始的，所以 k = 0 意味着根本不允许交易，这时候利润当然是 0)
+            dp[...][0][1] = -infinity(不允许交易的情况下，是不可能持有股票的。)
+```
+最后返回的是dp[n-1][0]
+
+`121 买股票的最佳时机`
+```
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        vector<vector<int>> dp(n,vector<int>(2));
+    }
+};
+```
