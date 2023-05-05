@@ -566,3 +566,29 @@ public:
     }
 };
 ```
+
+
+## day 0505
+### 124. 二叉树中的最大路径和
+递归思路，但是注意的是需要用辅助函数去递归，在辅助函数中更新结果；
+```
+    int res = INT_MIN;
+    int maxgain(TreeNode* root) {
+        if(root == nullptr) return 0;
+        int left = maxgain(root->left);
+        int right = maxgain(root->right);
+        int leftmax = max(0, left);
+        int rightmax = max(0, right);
+
+        //结果更新和左右节点有关，如果左右节点为负数则不做贡献；
+        int temp = root->val  + leftmax + rightmax;
+        res = max(res, temp);
+        
+        //返回节点的最大贡献值
+        return root->val + max(leftmax, rightmax); // 在每个节点中，子节点只能选择一条加入
+    }
+    int maxPathSum(TreeNode* root) {
+        maxgain(root);
+        return res;
+    }
+```
