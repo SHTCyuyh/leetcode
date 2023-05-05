@@ -592,3 +592,33 @@ public:
         return res;
     }
 ```
+
+### 128.最长连续序列
+* 暴力先排序，然后再遍历，注意相同元素的处理，可以用一个stack来存储连续的数，然后比较最长的stack；
+* 用哈希表：
+```
+unordered_set<int> set;
+for(int num: nums){
+    set.insert(num);
+}
+for(int num:set){
+    if(set.count(num - 1)){
+        continue; // set中存在比当前数小1的数；
+    }
+    int curNum = num;
+    int curLen = 1;
+    while(set.count(curNum + 1)){
+        curNum += 1;
+        curLen += 1; //set中存在比curNum大1的数说明是连续的；
+    }
+    res = max(res, curLen);
+}
+
+```
+
+### 136.只出现一次的数字
+一个数和本身做异或运算结果为0； 一个数和0做异或运算结果为本身
+```
+a ^ a = 0;
+a ^ 0 = a;
+```
