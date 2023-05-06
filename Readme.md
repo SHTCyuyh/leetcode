@@ -622,3 +622,21 @@ for(int num:set){
 a ^ a = 0;
 a ^ 0 = a;
 ```
+
+
+## day 0506
+### 139.单词拆分
+动态规划的思想：dp函数定义为 返回 s[i..] 是否能够被 wordDict 拼出
+```
+bool dp(string s, int i, vector<string>& wordDict){
+    for(string word : wordDict){
+        int len = word.size();
+        if(i+len > s.size()) continue;
+        if(s.substr(i,len) != word) continue;
+        if(dp(s, i+len, wordDict)){
+            return true;
+        } 
+    }
+    return false;
+}
+```
