@@ -640,3 +640,26 @@ bool dp(string s, int i, vector<string>& wordDict){
     return false;
 }
 ```
+
+## day 0507
+### 141.环形链表
+链表是否有环 快慢指针：（注意函数的终止条件）
+```
+while(fast && fast->next){
+    slow = slow->next;
+    fast = fast->next->next;
+    if(slow == fast) return 1;
+}
+return 0;
+```
+
+### 142.环形链表2
+环的长度为K，快比慢多走环的整数倍！ 从头到环的起点和从相遇点到环的起点距离相同；
+![avatar](fig/环形链表.png)
+
+
+### 143.LRU缓存
+unordered_map 默认从尾部插入
+类中 `->` 和 `.` 的区别？
+unordered_map.begin() -> first;
+unordered_map.erase(key);
