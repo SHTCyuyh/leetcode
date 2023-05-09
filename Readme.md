@@ -812,3 +812,49 @@ reverseb(node* head, int i, int j){
 ```
 
 
+### 207课程表：
+主要是判断图结构中是否存在环！！！
+```
+class Solution{
+    vector<bool> onPath;
+    vector<bool> visited;
+    bool hascycle = false;
+public:
+    bool canfinish(int numcourse, vector<vector<int>>& prerequisites){
+        vector<vector<int>> graph = buildGraph(numcourse, prerequisites);
+        visited.resize(numCourse, false);
+        onPath.resize(numCourses, false);
+        for(int i=0; i<numCourse; i++){
+            traverse(graph, i);
+        }
+        return !hascycle;
+    }
+    void traverse(vector<vector<int>>& graph, int s){
+        if(ospath[s]){
+            hascycle = true;
+        }
+        if(visited[s] || hascycle){
+            return;
+        }
+        visited[s] = true;
+        onpath[s] = true;
+        for(int t:graph[s]){
+            traverse(graph,t);
+        }
+        onpath[s] = false;
+    }
+    vector<vector<int>> buildGraph(int numCourses, vector<vector<int>>& prerequisites) {
+        // 图中共有 numCourses 个节点
+        vector<vector<int>> graph(numCourses);
+        for (auto edge : prerequisites) {
+            int from = edge[1];
+            int to = edge[0];
+            // 修完课程 from 才能修课程 to
+            // 在图中添加一条从 from 指向 to 的有向边
+            graph[from].push_back(to);
+        }
+        return graph;
+    }
+};
+
+```
