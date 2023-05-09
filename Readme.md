@@ -663,3 +663,152 @@ unordered_map 默认从尾部插入
 类中 `->` 和 `.` 的区别？
 unordered_map.begin() -> first;
 unordered_map.erase(key);
+
+
+## day 0509
+### 148.排序链表
+暴力： 冒泡排序L:超出时间限制；
+
+官方算法： cut + merge
+```
+class Solution {
+public:
+    ListNode* sortList(ListNode* head) {
+        return sortList(head, nullptr);
+    }
+
+    ListNode* sortList(ListNode* head, ListNode* tail) {
+        if (head == nullptr) {
+            return head;
+        }
+        if (head->next == tail) {
+            head->next = nullptr;
+            return head;
+        }
+        ListNode* slow = head, *fast = head;
+        while (fast != tail) {
+            slow = slow->next;
+            fast = fast->next;
+            if (fast != tail) {
+                fast = fast->next;
+            }
+        }
+        ListNode* mid = slow;
+        return merge(sortList(head, mid), sortList(mid, tail));
+    }
+
+    ListNode* merge(ListNode* head1, ListNode* head2) {
+        ListNode* dummyHead = new ListNode(0);
+        ListNode* temp = dummyHead, *temp1 = head1, *temp2 = head2;
+        while (temp1 != nullptr && temp2 != nullptr) {
+            if (temp1->val <= temp2->val) {
+                temp->next = temp1;
+                temp1 = temp1->next;
+            } else {
+                temp->next = temp2;
+                temp2 = temp2->next;
+            }
+            temp = temp->next;
+        }
+        if (temp1 != nullptr) {
+            temp->next = temp1;
+        } else if (temp2 != nullptr) {
+            temp->next = temp2;
+        }
+        return dummyHead->next;
+    }
+};
+```
+
+偷懒 把值存放在vector中，然后sort调用就行；
+
+### 152.乘积最大子数组
+类似于最大子数组和，动态转移方程： dp = max(nums[i], dp[i-1]*nums[i])
+但是由于会出现负数，所以需要维护最小值：
+```
+maxF[i] = max(maxF[i - 1] * nums[i], max(nums[i], minF[i - 1] * nums[i]));
+minF[i] = min(minF[i - 1] * nums[i], min(nums[i], maxF[i - 1] * nums[i]));
+```
+
+
+### 155最小栈
+用一个辅助栈记录最小值；
+每次辅助栈入栈min(top, val)这样每次出栈的时候可以保留当前栈的最小值；
+
+### 160.相交链表
+把，A接B 再把B接A
+
+### 169.多数元素
+hash表；
+众数；
+
+### 198.打家劫舍
+动态规划：
+不能连续打劫：
+dp[i] = max(dp[i+1], dp[i+2]+nums[i])
+```
+for(int i=n-1; i>=0; i--){
+    dp[i] = max(dp[i+1], dp[i+2]+nums[i])
+}
+return dp[0];
+```
+
+### 200.岛屿数量
+每次遇到一个陆地，将陆地联通的所有陆地都淹没成为海水；用dfs去遍历图类似
+```
+dfs(i,j,grid){
+    int m = grid.size(), n = grid[0].size();
+            if (i < 0 || j < 0 || i >= m || j >= n) {
+            // 超出索引边界
+            return;
+        }
+        if (grid[i][j] == '0') {
+            // 已经是海水了
+            return;
+        }
+        // 将 (i, j) 变成海水
+        grid[i][j] = '0';
+        // 淹没上下左右的陆地
+        dfs(grid, i + 1, j);
+        dfs(grid, i, j + 1);
+        dfs(grid, i - 1, j);
+        dfs(grid, i, j - 1);
+}
+
+```
+
+### 206反转链表
+```
+reverse(HEAD){
+    if(head == null || head->next == null) return head;
+    node* last = reverse(head->next);
+    head->next->next = head;
+    head->next = null;
+}
+```
+进阶反转部分链表：
+```
+##反转前n个
+node* succ;
+reverseN(head, int n){
+    if(n == 1){
+        succ = head->next;
+        return head;
+    }
+    node* last = reverseN(head->next, n-1);
+    head->next->next = head;
+    head->next = succ;
+    return last;
+}
+
+################################
+反转区间i，j之间
+reverseb(node* head, int i, int j){
+    if(i = 1){
+        return reverseN(head, j);
+    }
+    head->next = reverseb(head, i-1, j-1);
+}
+```
+
+
