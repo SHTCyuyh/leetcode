@@ -858,3 +858,38 @@ public:
 };
 
 ```
+
+
+### 739每日温度（单调栈）
+碰到下一个更大，下一个更小都要考虑单调栈的问题（单调栈里存储的是值还是索引）
+```
+    for (int i = n - 1; i >= 0; i--) {
+        // 判定个子高矮
+        while (!s.empty() && s.top() <= nums[i]) {
+            // 矮个起开，反正也被挡着了。。。
+            s.pop();
+        }
+        // nums[i] 身后的更大元素
+        res[i] = s.empty() ? -1 : s.top();
+        s.push(nums[i]);
+    }
+```
+
+```
+class Solution {
+public:
+    vector<int> dailyTemperatures(vector<int>& temperatures) {
+    int n = temperatures.size();
+    vector<int> res(n);
+    stack<int> s;
+    for(int i=n-1;i>=0;i--){
+        while(!s.empty() && temperatures[s.top()] <= temperatures[i]){
+            s.pop();
+        }
+        res[i] = s.empty()?0:(s.top() - i)
+        s.push(i);
+    }
+    return res;
+    }
+};
+```
