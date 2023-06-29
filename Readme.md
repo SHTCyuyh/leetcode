@@ -893,3 +893,56 @@ public:
     }
 };
 ```
+
+## 0629
+### 647回文子串
+dp算法：
+状态定义： dp[i][j]表示字符串s[i]...s[j]是否为回文串；
+状态转移： s[i] == s[j]  ==>>  j-1<=1(表示同一字符或者相邻)  || dp[i+1][j-1] == 1(表示去除首尾是回文)
+```
+class Solution {
+public:
+    int res=0;
+    int countSubstrings(string s) {
+        int n = s.size();
+        if(n == 0) return 0;
+        vector<vector<int>> dp(n,vector<int>(n,0));
+        for(int i=n-1; i>=0; i--){
+            for(int j=i; j<n; j++){
+                if(s[i]==s[j]){
+                    if(j-i<=1 || dp[i+1][j-1]){
+                        res ++;
+                        dp[i][j] = 1;
+                    }
+                }
+            }
+        }
+        return res;
+
+    }
+};
+```
+
+### 621任务调度器
+桶思想；时间间隔为n； 每个同的大小为n+1； 
+记录最大任务数量 N，看一下任务数量并列最多的任务有多少个，即最后一个桶子的任务数 X，计算 NUM1=(N-1)*(n+1)+x
+x计算为`int cnt=1;while(cnt<vec.size()&&vec[cnt]==vec[0]) cnt++;`(只有和最大任务数目相同的任务才能再最后一行填充)
+NUM2=tasks.size()
+输出其中较大值即可
+因为存在空闲时间时肯定是 NUM1 大，不存在空闲时间时肯定是 NUM2>=NUM1
+```
+class Solution {
+public:
+    int leastInterval(vector<char>& tasks, int n) {
+        vector<int> vec(26);
+        for(char c:tasks){
+            ++vec[c-'A'];
+        }
+        int len = tasks.size();
+        sort(vec.begin(),vec.end(),[](int& x,int&y){return x>y;});
+        int cnt=1;
+        while(cnt<vec.size()&&vec[cnt]==vec[0]) cnt++;
+        return max(len,cnt+(n+1)*(vec[0]-1) );
+    }
+};
+```
