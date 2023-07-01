@@ -946,3 +946,28 @@ public:
     }
 };
 ```
+## 0701\
+### 287寻找重复数；
+思路：因为值特殊，数组有n+1个数，且值在[1，n]之间；
+存在index到nums[index]的映射， 有无重复数可以转换时有无环和找到环的入口问题【快慢指着】
+```
+class solution{
+    public：
+    int findDuplicate(vector<int>& nums) {
+        int slow = 0;
+        int fast = 0;
+        while(1){
+            slow = nums[slow];
+            fast = nums[nums[fast]];
+            if(slow == fast) break;
+        }
+        int finder = 0;
+        while(1){
+            slow = nums[slow];
+            finder = nums[finder];
+            if(slow == finder) break;
+        }
+        return finder;
+    }
+}
+```
