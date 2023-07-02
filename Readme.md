@@ -978,7 +978,7 @@ class solution{
 反序列化需要注意的是，数据结构，先入先出： queue `q.push();q.frong(); q.pop()`
 重构函数，形参不同
 注意char 和 string表示 初始化的时候定义char 为单引号''; 定义string时候为双引号"",
-char和string不能直接比较 'CHAR == SEP[0]'!!
+char和string不能直接比较 正确：'CHAR == SEP[0]'!!  错误 'CHAR == SEP'
 ```
 class Codec {
 public:
