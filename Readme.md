@@ -971,3 +971,51 @@ class solution{
     }
 }
 ```
+
+## 0702
+### 297二叉树的序列化和反序列化
+将二叉树转存为string，注意分隔符和NULL的处理
+反序列化需要注意的是，数据结构，先入先出： queue `q.push();q.frong(); q.pop()`
+重构函数，形参不同
+注意char 和 string表示 初始化的时候定义char 为单引号''; 定义string时候为双引号"",
+char和string不能直接比较 'CHAR == SEP[0]'!!
+```
+class Codec {
+public:
+    string SEP = ",";
+    string NULL_STR = "#";
+    // Encodes a tree to a single string.
+    string serialize(TreeNode* root) {
+        if(!root) return string(NULL_STR) + SEP;
+        string res = to_string(root->val) + SEP;
+        res += serialize(root->left);
+        res += serialize(root->right);
+        return res;
+    }
+
+    // Decodes your encoded data to tree.
+    TreeNode* deserialize(string data) {
+        queue<string> nodes;
+        string cur = "";
+        for(char c:data){
+            // cout << c;
+            if(c == SEP[0]){
+                nodes.push(cur);
+                cur = "";
+            }else cur += c;
+        }
+        return deserialize(nodes);
+    }
+
+    TreeNode* deserialize(queue<string> &nodes) {
+        if(nodes.empty()) return NULL;
+        string first = nodes.front(); nodes.pop();
+        if(first == NULL_STR) return NULL;
+        TreeNode* root = new TreeNode(stoi(first));
+
+        root->left = deserialize(nodes);
+        root->right = deserialize(nodes);
+        return root;
+    }
+};
+```
