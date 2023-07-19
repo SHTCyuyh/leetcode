@@ -1075,3 +1075,88 @@ public:
     }
 }
 ```
+
+### 309. 最佳买卖股票时机含冷冻期
+股票系列问题的状态定义：
+dp[i][k][0 or 1] //dp[i][k][2] 
+0 <= i <= n - 1, 1 <= k <= K
+n 为天数，大 K 为交易数的上限，0 和 1 代表是否持有股票。
+状态转移方程：
+dp[i][k][0] = max(dp[i-1][k][0], dp[i-1][k][1] + prices[i])
+dp[i][k][1] = max(dp[i-1][k][1], dp[i-1][k-1][0] - prices[i])
+
+base case：
+dp[-1][...][0] = dp[...][0][0] = 0
+dp[-1][...][1] = dp[...][0][1] = -infinity
+
+注意有冻结期的时候，买入要从i-n的时间开始计算
+```
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int n = prices.size();
+        vector<vector<int>> dp(n, vector<int>(2));
+        for(int i=0; i< n; i++){
+            if(i == 0){
+                dp[i][0] = 0;
+                dp[i][1] = -prices[i];
+                continue;
+            }
+            if(i == 1){
+                dp[i][0] = max(dp[i-1][1] + prices[i], dp[i-1][0]);
+                dp[i][1] = max(dp[i-1][0]-prices[i], dp[i-1][-1]);
+                continue;    
+            }
+            dp[i][0] = max(dp[i-1][0], dp[i-1][1] + prices[i]);
+            dp[i][1] = max(dp[i-1][1], dp[i-2][0]-prices[i]);
+        }
+        return dp[n-1][0];
+    }
+};
+```
+
+### 312. 戳气球
+最值问题的关键就是`枚举`，用回溯枚举所有结果取最值，和用dp使用状态转移枚举；
+dp数组定义：
+dp[i][j] 表示，戳破气球 i 和气球 j 之间（开区间，不包括 i 和 j）的所有气球，可以获得的最高分数为 x。
+base case对象线为0；
+要戳破首位，添加虚拟节点-1，n且值为1；
+状态转移：
+    dp[i][j] = max(dp[i][j],
+                    dp[i][k] + dp[k][j] + points[i]*points[k] * points[j])
+                    //戳破i-k 和 k-j之后之剩余ijk
+![avatar](fig/戳皮球1.png)
+
+如何遍历：
+要求的最终态为：dp[0][n+1] 对于所有的dp[i][j]都希望所有的dp[i][k] 和 dp[k][j] 已经被计算，画在图上就是这种情况
+![avatar](fig/戳皮球2.png)
+所以需要从下往上；从左往右遍历
+```
+class Solution {
+public:
+    int maxCoins(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> points(n + 2);
+        points[0] = points[n + 1] = 1;
+        for (int i = 1; i <= n; i++) {
+            points[i] = nums[i - 1];
+        }
+        vector<vector<int>> dp(n + 2, vector<int>(n + 2, 0));
+        for (int i = n; i >= 0; i--) {
+            // j 应该从左往右
+            for (int j = i + 1; j < n + 2; j++) {
+                // 最后戳破的气球是哪个？
+                for (int k = i + 1; k < j; k++) {
+                    // 择优做选择
+                    dp[i][j] = max(
+                            dp[i][j],
+                            dp[i][k] + dp[k][j] + points[i] * points[j] * points[k]
+                    );
+                }
+            }
+        }
+        return dp[0][n + 1];
+    }
+
+};
+```
