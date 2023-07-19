@@ -1256,4 +1256,46 @@ public:
 };
 ```
 
-ss
+### 394. 字符串解码
+1.栈的思想，遇到'['就把当前str和num入栈；
+2.遇到']'就依次出栈
+3.string转int `atoi(times.c_str())`或者 num = num * 10 + s[i] - '0';
+
+```class Solution {
+public:
+    string decodeString(string s) {
+        string strNum = "";
+        string strChar = "";
+        stack<string> stk;
+        for(char c: s){
+            if(c <= '9' && c >= '0'){
+                strNum += c;
+            }
+            if (c == '[') {
+                stk.push(strNum);
+                strNum = "";
+                stk.push(strChar);
+                strChar = "";
+            }
+            if (c >= 'a' && c <= 'z') {
+                strChar += c;
+            }
+            if (c == ']') {
+                string top = stk.top();
+                stk.pop();
+                string times = stk.top();
+                stk.pop();
+                int itimes = atoi(times.c_str());
+                for(int j = 0; j < itimes; ++ j)
+                    top += strChar;
+                strChar = top;
+                // cout << strChar << endl;
+            }
+
+        }
+
+        return strChar;
+    }
+};
+
+```
