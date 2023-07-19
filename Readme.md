@@ -1174,12 +1174,58 @@ public:
             return memo[root];
         }
         int do_it = root->val + 
-                    (root->left == nullptr?0:rob(root->left->left)+rob(root->left->right))+                   (root->right == nullptr?0:rob(root->right->left)+rob(root->right->right));
+                    (root->left == nullptr?0:rob(root->left->left)+rob(root->left->right)) +   
+                    (root->right == nullptr?0:rob(root->right->left)+rob(root->right->right));
         int not_do = rob(root->left) + rob(root->right);
         int res = max(do_it,not_do);
         memo[root] = res;
         return res;
 
+    }
+};
+```
+
+### 322. 零钱兑换
+```
+class Solution {
+public:
+    int coinChange(vector<int>& coins, int amount) {
+        vector<int> dp(amount+1,amount+1);
+        dp[0] = 0;
+        // 外层 for 循环在遍历所有状态的所有取值
+        for(int i = 1; i<amount+1; i++){
+            // 内层 for 循环在求所有选择的最小值
+            for(int coin:coins){
+                // 子问题无解，跳过
+                if(i <coin) continue;
+                dp[i] = min(dp[i], dp[i-coin]+1);
+            }
+        }
+        return dp[amount]==amount+1?-1:dp[amount];
+    }
+};
+```
+
+### 338. 比特位计数
+奇数比同个数偶数多1 比如`0->0 1->1`
+偶数相当于他的一半后添加一个0 比如`1->1;2->10;4->100;` ，`3->11; 6->110,12->1100`,
+tips: 判断奇偶可以使用(i & 1)
+```
+class Solution {
+public:
+    vector<int> countBits(int n) {
+        vector<int> res(n+1);
+        res[0] = 0;
+        for(int i=1; i<=n; i++){
+            if(i & 1 == 1){
+                res[i] = res[i-1] +1;
+            }else{
+                int j = i/2;
+                res[i] = res[j];
+            }
+            
+        }
+        return res;
     }
 };
 ```
