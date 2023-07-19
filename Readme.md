@@ -1229,3 +1229,31 @@ public:
     }
 };
 ```
+### 347. 前 K 个高频元素
+1.采用oredered_map记录每个元素出现频率；
+2.用sort方法排序（保存在迭代器中，map需要存成vec）
+`sort(vector.begin(), vector.end(), [](pair<int, int>&a, pair<int, int>&b){return a.second>b.second;})`
+```
+class Solution {
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        unordered_map<int,int> map;
+        vector<pair<int, int>> vec;
+        vector<int> res;
+        for(int i : nums){
+            map[i]++;
+        }    
+        for (auto it:map) {
+		vec.push_back(it);
+	}  
+        sort(vec.begin(), vec.end(),[](pair<int, int>&a, pair<int, int>&b) {return a.second>b.second;});
+        for(int i=0; i<k; i++){
+            pair<int,int> a = vec[i];
+            res.push_back(a.first);
+        }
+        return res;
+    }
+};
+```
+
+ss
