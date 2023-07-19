@@ -978,7 +978,7 @@ class solution{
 反序列化需要注意的是，数据结构，先入先出： queue `q.push();q.frong(); q.pop()`
 重构函数，形参不同
 注意char 和 string表示 初始化的时候定义char 为单引号''; 定义string时候为双引号"",
-char和string不能直接比较 正确：'CHAR == SEP[0]'!!  错误 'CHAR == SEP'
+char和string不能直接比较 正确：`CHAR == SEP[0]`!!  错误 `CHAR == SEP`
 ```
 class Codec {
 public:
@@ -1018,4 +1018,60 @@ public:
         return root;
     }
 };
+```
+## 0719
+### 301. 删除无效的括号
+采用dfs+剪枝
+1.先遍历string 确定需要删除的左括号和右括号
+2.然后用删除左括号右括号做条件去搜索合适的解
+3.剪枝，不能保留右括号；
+```
+class Solution {
+public:
+    unordered_set<string> unique;
+    vector<string> removeInvalidParentheses(string s) {
+        int l,r;
+    #先遍历string 确定需要删除的左括号和右括号
+        for(char c: s){
+            if(c == '('){
+                l ++;
+            }if(c == ')'){
+                if(l>0){
+                    l--;
+                }r++;
+            }
+        }
+    #然后用删除左括号右括号做条件去搜索合适的解
+    string t = "";
+    vector<string> ans;
+    dfs(s,t,0,l,r,0,0);
+    for(auto s:unique){
+        ans.push_back(s);
+    }
+    return ans
+    }
+    void dfs(string &s, string &t, int i, intl, int r, int lcnt, int rcnt){
+        if(i == s.size()) {
+            if(l == 0 && r == 0)unique.insert(t);
+            return;
+        }
+        #删除左括号和右括号，但是需要保证左右括号删除个数满足l,r
+        if(s[i] == '(' && l > 0){
+            dfs(s,t,i+1,l-1,r,lcnt,rcnt);
+        }
+        if(s[i] == ')' && r > 0){
+            dfs(s,t,i+1,l,r-1,lcnt,rcnt);
+        }
+        #保留当前字符
+        t.push_back(s[i]);
+        if(s[i] != '(' && s[i] != ')'){
+            dfs(s,t,i+1,l,r,lcnt,rcnt);
+        }else if(s[i] == '('){
+            dfs(s,t,i+1,l,r,lcnt+1,rcnt);
+        }else if(rcnt < lcnt){ #剪枝，只有rcnt<lcnt 时候保留右括号才有意义
+            dfs(s,t,i+1,l,r,lcnt,rcnt+1);
+        }
+        t.pop_back();
+    }
+}
 ```
