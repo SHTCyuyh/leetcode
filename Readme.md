@@ -1299,3 +1299,89 @@ public:
 };
 
 ```
+
+## 0720
+### 399. 除法求值
+（自己思路）： 构建拓扑结构？map(str,vector<map(vec<str,value>>)) 【不能处理多个串的情况】
+(完整思路)：用hashmap建立图正确； 遍历不能直接遍历，而应该用dfs搜索
+
+```
+class Solution {
+public:
+    unordered_map<string,int> visit; 
+    vector<double> calcEquation(vector<vector<string>>& equations, vector<double>& values, vector<vector<string>>& queries) {
+        unordered_map<string,vector<pair<string,double>>> map;
+        int n = equations.size();
+        for(int i=0;i<n;i++){
+            vector<string> a = equations[i];
+            string first = a[0];
+            string second = a[1];
+            double v = values[i];
+            pair<string,double> temp;
+            pair<string,double> temp2;
+            temp = {second,v};
+            temp2= {first,1.0/v};
+            map[first].push_back(temp);
+            map[second].push_back(temp2);
+        }
+
+        vector<double> ans(queries.size(),-1);
+        for(int i=0; i<queries.size(); ++i){
+            vector<string> ques = queries[i];
+            string first = ques[0];
+            string second = ques[1];
+            double res=-1;
+            if(map.count(first)) {
+                // for(auto it : map[first]){
+                //     cout << it.first <<endl;
+                // }
+                visit.clear();  //清理上一次查找过的所有根节点
+                res=dfs(map,first,second,1);    //每一次访问时不能互相干扰。
+            }
+            ans[i] = res;
+        }
+        return ans;
+    }
+        double dfs(unordered_map<string,vector<pair<string,double>>>& mp,string& a,string &b,double res)
+        { //a/b
+        //if(mp.count(a)==0) return -1;
+        //cout<<a<<endl;
+        
+        if(a==b) return res;
+        double ans=-1;
+        if(visit[a]) return ans;   //证明还没以该节点为根进行遍历过
+        visit[a]=1;
+        for(auto it:mp[a]){
+            // cout << it.first << endl;
+            ans=dfs(mp,it.first,b,res*it.second);
+            if(ans!=-1) break;
+        } 
+        return ans;
+        }
+};
+
+```
+
+### 406. 根据身高重建队列
+(自己思路):先用sort排序，之后根据前面有多少人排[实现有问题,vector按照位置插值 vector.begin()+index]
+(完整思路):vector[0]降序；vector[1]正序` // sort(people.begin(),people.end(),[](auto& a, auto& b){if(a[0] != b[0]) return a[0] > b[0];else return a[1] < b[1];});`
+```
+class Solution {
+public:
+    static bool cmp(vector<int>& a, vector<int> &b){
+        if(a[0] != b[0]){
+             return (a[0] > b[0]);
+        }return a[1] < b[1];
+    }
+    vector<vector<int>> reconstructQueue(vector<vector<int>>& people) {
+        int n = people.size();   
+        sort(people.begin(),people.end(),cmp);
+        vector<vector<int>> res;
+        for(auto p:people){
+            if(res.size() > p[1]) res.insert(res.begin()+p[1], p);
+            else res.push_back(p);
+        }
+        return res;
+    }
+};
+```
