@@ -1385,3 +1385,102 @@ public:
     }
 };
 ```
+
+### 437. 路径总和 III
+(思路)：递归dfs注意值的范围
+```
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int count = 0;
+    int pathSum(TreeNode* root, int targetSum) {
+        if(root== nullptr) return 0;
+        dfs(root,targetSum);
+        pathSum(root->left,targetSum);
+        pathSum(root->right,targetSum);
+        return count;
+    }
+    void dfs(TreeNode *root, long sum)
+{
+    if (!root)
+        return;
+    sum -= root->val;
+    if (sum == 0) //注意不要return,因为不要求到叶节点结束,所以一条路径下面还可能有另一条
+        count++;  //如果找到了一个路径全局变量就+1
+    dfs(root->left, sum);
+    dfs(root->right, sum);
+}
+};
+
+```
+
+### 438. 找到字符串中所有字母异位词
+(思路)：滑动窗口（map映射每个词的频率，指针控制窗口）【超出时间限制】
+(思路)：用两个map分别记录需要和已有的window
+```
+class Solution {
+public:
+    vector<int> findAnagrams(string s, string p) {
+        unordered_map<char, int> need, window;
+        for(char c:p){
+            need[c] ++;
+        }
+        int left = 0, right = 0;
+        int valid = 0;
+        vector<int> res;
+        while(right < s.size()){
+            char c = s[right];
+            right++;
+            if(need.count(c)){
+                window[c]++;
+                if(window[c] == need[c])
+                    valid++;
+            }
+            while(right - left == p.size()){
+                if(valid == need.size())
+                    res.push_back(left);
+                char d = s[left];
+                left++;
+                if(need.count(d)){
+                    if(window[d] == need[d])
+                        valid--;
+                    window[d]--;
+                }
+            }
+        }
+        return res;
+    }
+};
+```
+
+### 448. 找到所有数组中消失的数字
+```
+class Solution {
+public:
+    vector<int> findDisappearedNumbers(vector<int>& nums) {
+        vector<int> res;
+        int n = nums.size();
+        sort(nums.begin(),nums.end());
+        unordered_set<int> set;
+        for(int i:nums){
+            set.insert(i);
+        }
+        for(int i=0; i<n; i++){
+            if(!set.count(i+1))
+                res.push_back(i+1);
+             
+        }
+        return res;
+    }
+};
+```
