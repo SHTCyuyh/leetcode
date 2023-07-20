@@ -1484,3 +1484,100 @@ public:
     }
 };
 ```
+
+### 461. 汉明距离
+方法1： 内置函数`__builtin_popcount()`
+方法2：s & 1表示检查最后一位是不是1，然后s>>=1
+方法3：s &= s - 1;表示删去s最右边的一个1，内次删除次数加1，直到为0
+```
+方法1：class Solution {
+public:
+    int hammingDistance(int x, int y) {
+        return __builtin_popcount(x ^ y);
+    }
+};
+
+方法2：class Solution {
+public:
+    int hammingDistance(int x, int y) {
+        int s = x ^ y, ret = 0;
+        while (s) {
+            ret += s & 1;
+            s >>= 1;
+        }
+        return ret;
+    }
+};
+
+方法3: class Solution {
+public:
+    int hammingDistance(int x, int y) {
+        int s = x ^ y, ret = 0;
+        while (s) {
+            s &= s - 1;
+            ret++;
+        }
+        return ret;
+    }
+};
+```
+### 494 目标和
+（思路回溯）： 可以但是卡在超时的边缘
+```
+class Solution {
+public:
+    int count = 0;
+
+    int findTargetSumWays(vector<int>& nums, int target) {
+        backtrack(nums, target, 0, 0);
+        return count;
+    }
+
+    void backtrack(vector<int>& nums, int target, int index, int sum) {
+        if (index == nums.size()) {
+            if (sum == target) {
+                count++;
+            }
+        } else {
+            backtrack(nums, target, index + 1, sum + nums[index]);
+            backtrack(nums, target, index + 1, sum - nums[index]);
+        }
+    }
+};
+```
+（动归）[消除重复子问题]：
+```
+// 注意：cpp 代码由 chatGPT🤖 根据我的 java 代码翻译，旨在帮助不同背景的读者理解算法逻辑。
+// 本代码还未经过力扣测试，仅供参考，如有疑惑，可以参照我写的 java 代码对比查看。
+
+class Solution {
+public:
+    int findTargetSumWays(vector<int>& nums, int target) {
+        if (nums.size() == 0) return 0;
+        return dp(nums, 0, target);
+    }
+
+private:
+    // 备忘录
+    unordered_map<string, int> memo;
+    int dp(vector<int>& nums, int i, int remain) {
+        // base case
+        if (i == nums.size()) {
+            if (remain == 0) return 1;
+            return 0;
+        }
+        // 把它俩转成字符串才能作为哈希表的键
+        string key = to_string(i) + "," + to_string(remain);
+        // 避免重复计算
+        if (memo.count(key)) {
+            return memo[key];
+        }
+        // 类似递归
+        int result = dp(nums, i + 1, remain - nums[i]) + dp(nums, i + 1, remain + nums[i]);
+        // 记入备忘录
+        memo[key] = result;
+        return result;
+    }
+};
+
+```
