@@ -1581,3 +1581,161 @@ private:
 };
 
 ```
+## 0721
+### 538. 把二叉搜索树转换为累加树
+(自己思路)：先找到最右边的节点作为起点，每个值记录回溯；
+(正确)：遍历二叉树可以用辅助函数traverse！
+```
+class Solution {
+public:
+    int carry;
+    TreeNode* convertBST(TreeNode* root) {
+        traverse(root);
+        return root;
+    }
+    int sum = 0;
+    void traverse(TreeNode* root){
+        if(root == nullptr){
+            return;
+        }
+        traverse(root->right);
+        sum += root->val;
+        root->val = sum;
+        traverse(root->left);
+    }
+};
+```
+### 543. 二叉树的直径
+(二叉树的遍历，递归忘得有点多，需要复习)
+思路：二叉树得直径等于左右子树最大深度和，转换为最大深度，并且用全局变量记录最大直径
+
+```
+`最大深度`：
+int maxdepth(TreeNode* root){
+    if(root == nullptr){
+        return 0;
+    }
+    int left = maxdepth(root->left);
+    int right = maxdepth(root->right);
+    return 1+max(left,right);
+}
+
+本题在后序位置更新全局变量:
+```/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int max = INT_MIN;
+    int diameterOfBinaryTree(TreeNode* root) {
+
+    }
+    int maxDepth(TreeNode* root){
+        if(root == nullptr){
+            return 0;
+        }
+        int leftmax = maxDepth(root->left);
+        int rightmax = maxDepth(root->right);
+        max = max(max,leftmax+rightmax);
+        return 1+max(leftmax,rightmax);
+    }
+};
+```
+### 560. 和为 K 的子数组
+(思路)：滑动窗口；（不行因为有负值，left得移动有问题）
+（思路）：前缀和加哈希只要已经保存了hash（pre-k）的key 则说明pre-k到pre之间满足子数组和为k
+```
+class Solution {
+public:
+    int subarraySum(vector<int>& nums, int k) {
+        int n = nums.size();
+        unordered_map<int,int> map;
+        map[0] = 1;
+        int pre = 0;
+        int count = 0;
+        for(int i=0; i<n; i++){
+            pre += nums[i];
+            if(map.find(pre-k)!=map.end()){
+                count += map[pre-k];
+            }
+            map[pre]++;
+        }
+        return count;
+    }
+};
+```
+
+### 581. 最短无序连续子数组
+(思路)：排序后找最大索引和最小索引：
+```
+class Solution {
+public:
+    int findUnsortedSubarray(vector<int>& nums) {
+        vector<int> temp;
+        temp = nums;
+        sort(temp.begin(),temp.end());
+        int res = 0;
+        int l=nums.size(),r=-1;
+        for(int i=0; i<temp.size(); i++){
+            if(nums[i] != temp[i]){
+                l = min(i,l);
+                r = max(i,r);
+            }
+        }
+        if(l==nums.size()) return 0;
+        return r-l+1;
+    }
+};
+```
+(O(n)方法)：维护左右边界
+```
+class Solution {
+public:
+    int findUnsortedSubarray(vector<int>& nums) {
+        int n = nums.size();
+        int maxn = INT_MIN, right = -1;
+        int minn = INT_MAX, left = -1;
+        for (int i = 0; i < n; i++) {
+            if (maxn > nums[i]) {
+                right = i;
+            } else {
+                maxn = nums[i];
+            }
+            if (minn < nums[n - i - 1]) {
+                left = n - i - 1;
+            } else {
+                minn = nums[n - i - 1];
+            }
+        }
+        return right == -1 ? 0 : right - left + 1;
+    }
+};
+```
+### 617. 合并二叉树
+(思路)：递归不熟悉，不知道怎么处理basecase；
+```
+class Solution {
+public:
+    TreeNode* mergeTrees(TreeNode* t1, TreeNode* t2) {
+        if (t1 == nullptr) {
+            return t2;
+        }
+        if (t2 == nullptr) {
+            return t1;
+        }
+        TreeNode* merged = new TreeNode(t1->val + t2->val);
+        merged->left = mergeTrees(t1->left,t2->left);
+        merged->right = mergeTrees(t1->right,t2->right);
+        return merged;
+    }
+};
+
+```
