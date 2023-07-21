@@ -1619,7 +1619,6 @@ int maxdepth(TreeNode* root){
     int right = maxdepth(root->right);
     return 1+max(left,right);
 }
-
 本题在后序位置更新全局变量:
 ```/**
  * Definition for a binary tree node.
