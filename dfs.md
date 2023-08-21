@@ -88,3 +88,182 @@ public:
     }
 };
 ```
+
+### 419. 甲板上的战舰
+给你一个大小为 m x n 的矩阵 board 表示甲板，其中，每个单元格可以是一艘战舰 'X' 或者是一个空位 '.' ，返回在甲板 board 上放置的 战舰 的数量。战舰 只能水平或者垂直放置在 board 上。换句话说，战舰只能按 1 x k（1 行，k 列）或 k x 1（k 行，1 列）的形状建造，其中 k 可以是任意大小。两艘战舰之间至少有一个水平或垂直的空位分隔 （即没有相邻的战舰）。
+(思路：翻译，检查所有横着和列是否是相同的'X',计数)
+```
+class Solution {
+public:
+    int m, n;
+    vector<vector<bool>> visited;
+    int countBattleships(vector<vector<char>>& board) {
+        if(board.size()==0 || board[0].size()== 0){
+            return 0;
+        }
+        int cnt = 0;
+        m = board.size(), n = board[0].size();
+        visited.resize(m,vector<bool>(n,false));
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                if(board[i][j] == 'X'){
+                    dfs(board,i,j);
+                    cnt++;
+                }
+            }
+        }
+        return cnt;
+    }
+    void dfs(vector<vector<char>>& board,int i, int j){
+        if(i<0 || i>=m || j<0 || j>=n || board[i][j]!='X') return;
+        board[i][j] = '.';
+        dfs(board,i+1,j);
+        dfs(board,i-1,j);
+        dfs(board,i,j+1);
+        dfs(board,i,j-1);
+    }
+};
+```
+
+### 463. 岛屿的周长
+给定一个 row x col 的二维网格地图 grid ，其中：grid[i][j] = 1 表示陆地， grid[i][j] = 0 表示水域。
+网格中的格子 水平和垂直 方向相连（对角线方向不相连）。整个网格被水完全包围，但其中恰好有一个岛屿（或者说，一个或多个表示陆地的格子相连组成的岛屿）。
+岛屿中没有“湖”（“湖” 指水域在岛屿内部且不和岛屿周围的水相连）。格子是边长为 1 的正方形。网格为长方形，且宽度和高度均不超过 100 。计算这个岛屿的周长。
+```
+class Solution {
+public:
+    int m, n;
+    int res;
+    vector<vector<int>> dirs{ {-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    int islandPerimeter(vector<vector<int>>& grid) {
+        m = grid.size(), n = grid[0].size();
+        res = 0;
+        for(int i=0; i<m;i++){
+            for(int j=0;j<n; j++){
+                if(grid[i][j] == 1){
+                    int cnt = 0;
+                    for(int k=0;k<4;k++){
+                        int x = i+dirs[k][0];
+                        int y = j+dirs[k][1];
+                        if(x<0||x>=m||y<0||y>=n|| grid[x][y]==0){
+                            cnt += 1
+                        }
+                    }
+
+                    res += cnt;
+                }
+            }
+        }
+        return res;
+    }
+};
+```
+
+### 529. 扫雷游戏
+给你一个大小为 m x n 二维字符矩阵 board ，表示扫雷游戏的盘面，其中：
+'M' 代表一个 未挖出的 地雷，
+'E' 代表一个 未挖出的 空方块，
+'B' 代表没有相邻（上，下，左，右，和所有4个对角线）地雷的 已挖出的 空白方块，
+数字（'1' 到 '8'）表示有多少地雷与这块 已挖出的 方块相邻，
+'X' 则表示一个 已挖出的 地雷。
+(思路：遇到数字就结束，如果每次都是'E',则递归的搜索下一个E)
+```
+class Solution {
+public:
+    vector<vector<int>> dirs{-1,0},{1,0},{0,1},{0,-1},{-1,-1},{1,1},{-1,1},{1,-1};
+    vector<vector<char>> updateBoard(vector<vector<char>>& board, vector<int>& click) {
+        int m = board.size(), n = board[0].size();
+        int r = click[0], c = click[1];
+        if(board[r][c] == 'M' || board[r][c] == 'X'){
+            board[r][c] = 'X';
+            return board;
+        }
+        int num = 0;
+        for(int i=0;i<8;i++){
+            int x = r+dirs[i][0], y = c+dirs[i][1];
+            if(x>=0 && x<m && y>=0 && y<n && board[x][y]=='M')num++;
+        }
+            if(num >0){
+                board[r][c] = '0'+num;
+                return board;
+            }
+        board[r][c] = 'B';
+        for(int i=0;i<8;i++){
+            int x = r+dirs[i][0], y = c+dirs[i][1];
+            if(x>=0 && x<m && y>=0 && y<n && board[x][y]=='E'){
+                vector<int> next_click = {x, y};
+                updateBoard(board, next_click);
+                }
+            }
+    return board;
+    }
+};
+```
+
+### 695. 岛屿的最大面积
+给你一个大小为 m x n 的二进制矩阵 grid 。
+岛屿 是由一些相邻的 1 (代表土地) 构成的组合，这里的「相邻」要求两个 1 必须在 水平或者竖直的四个方向上 相邻。你可以假设 grid 的四个边缘都被 0（代表水）包围着。
+岛屿的面积是岛上值为 1 的单元格的数目。
+计算并返回 grid 中最大的岛屿面积。如果没有岛屿，则返回面积为 0 。
+(思路：带返回值的dfs，用for循环遍历方向，之后dfs递归调用)
+```
+class Solution {
+public:
+    int m,n;
+    vector<vector<int>> dirs{-1,0},{1,0},{0,1},{0,-1};
+    int maxAreaOfIsland(vector<vector<int>>& grid) {
+        if(grid.size()==0 || grid[0].size()==0) return 0;
+        m = grid.size(), n = grid[0].size();
+        int res = 0;
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                res = max(res, dfs(grid,i,j));
+            }
+        }
+        return res;
+    }
+    int dfs(vector<vector<int>>& grid, int i, int j){
+        if(i<0 || i>=m || j<0 ||j>=n || grid[i][j]==0) return 0;
+        grid[i][j] = 0;
+        int ans = 1;
+        for(int k=0;k<4;k++){
+            int x = i+dirs[k][0], y=j+dirs[k][1];
+            ans += dfs(grid,x,y);
+        }
+        return ans;
+    }
+};
+```
+
+### 733. 图像渲染
+有一幅以 m x n 的二维整数数组表示的图画 image ，其中 image[i][j] 表示该图画的像素值大小。
+你也被给予三个整数 sr ,  sc 和 newColor 。你应该从像素 image[sr][sc] 开始对图像进行 上色填充 。
+为了完成 上色工作 ，从初始像素开始，记录初始坐标的 上下左右四个方向上 像素值与初始坐标相同的相连像素点，接着再记录这四个方向上符合条件的像素点与他们对应 四个方向上 像素值与初始坐标相同的相连像素点，……，重复该过程。将所有有记录的像素点的颜色值改为 newColor 。
+(思路：思考什么时候的返回值是void，什么时候的返回值是int或者是别的特殊返回值，**计算单个连通块的返回值**)
+```
+class Solution {
+public:
+    int m,n;
+    vector<vector<int>> dirs{-1,0},{1,0},{0,1},{0,-1};
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int color) {
+        if(image.size()==0 || image[0].size()==0) return {};
+        m = image.size(), n = image[0].size();
+        int flag = image[sr][sc];
+        if(flag != color){
+            dfs(image,sr,sc,flag,color);
+        }
+        return image;
+    }
+    void dfs(vector<vector<int>>& image, int x, int y, int flag,int color){
+        if (image[x][y] == flag) {
+            image[x][y] = color;
+            for (int i = 0; i < 4; i++) {
+                int mx = x + dirs[i][0], my = y + dirs[i][1];
+                if (mx >= 0 && mx < m && my >= 0 && my <n) {
+                    dfs(image, mx, my, flag, color);
+                }
+            }
+        }
+    }
+};
+```
